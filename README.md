@@ -3,6 +3,8 @@
 
 ### [Paper](https://arxiv.org/abs/1812.09912) | [Pytorch code](https://github.com/WonwoongCho/GDWCT)
 
+# Will be soon
+
 ## Usage
 ```
 ├── dataset
@@ -36,6 +38,8 @@
 ```
  > python main.py --dataset male2female --phase test
 ```
+
+## Results
 
 ## Author
 Junho Kim
