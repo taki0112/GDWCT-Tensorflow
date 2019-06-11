@@ -45,7 +45,7 @@
 
 ---
 
-### Colorling
+### Coloring
 ![coloring](./assets/coloring.png)
 
 ---
@@ -69,4 +69,4 @@
 ![result](./assets/result.png)
 
 ## Author
-Junho Kim
+[Junho Kim](http://bit.ly/jhkim_ai)
