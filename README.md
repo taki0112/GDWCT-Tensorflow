@@ -35,7 +35,7 @@
 
 ### Test
 ```
- > python main.py --dataset male2female --phase test --guide_img ./guide.png
+ > python main.py --dataset male2female --phase test --direction a2b --guide_img ./guide.png
 ```
 
 ## Summary
