@@ -57,58 +57,6 @@ def conv(x, channels, kernel=4, stride=2, pad=0, pad_type='zero', use_bias=True,
 
         return x
 
-
-def partial_conv(x, channels, kernel=3, stride=2, use_bias=True, padding='SAME', sn=False, scope='conv_0'):
-    with tf.variable_scope(scope):
-        if padding.lower() == 'SAME'.lower():
-            with tf.variable_scope('mask'):
-                _, h, w, _ = x.get_shape().as_list()
-
-                slide_window = kernel * kernel
-                mask = tf.ones(shape=[1, h, w, 1])
-
-                update_mask = tf.layers.conv2d(mask, filters=1,
-                                               kernel_size=kernel, kernel_initializer=tf.constant_initializer(1.0),
-                                               strides=stride, padding=padding, use_bias=False, trainable=False)
-
-                mask_ratio = slide_window / (update_mask + 1e-8)
-                update_mask = tf.clip_by_value(update_mask, 0.0, 1.0)
-                mask_ratio = mask_ratio * update_mask
-
-            with tf.variable_scope('x'):
-                if sn:
-                    w = tf.get_variable("kernel", shape=[kernel, kernel, x.get_shape()[-1], channels],
-                                        initializer=weight_init, regularizer=weight_regularizer)
-                    x = tf.nn.conv2d(input=x, filter=spectral_norm(w), strides=[1, stride, stride, 1], padding=padding)
-                else:
-                    x = tf.layers.conv2d(x, filters=channels,
-                                         kernel_size=kernel, kernel_initializer=weight_init,
-                                         kernel_regularizer=weight_regularizer,
-                                         strides=stride, padding=padding, use_bias=False)
-                x = x * mask_ratio
-
-                if use_bias:
-                    bias = tf.get_variable("bias", [channels], initializer=tf.constant_initializer(0.0))
-
-                    x = tf.nn.bias_add(x, bias)
-                    x = x * update_mask
-        else:
-            if sn:
-                w = tf.get_variable("kernel", shape=[kernel, kernel, x.get_shape()[-1], channels],
-                                    initializer=weight_init, regularizer=weight_regularizer)
-                x = tf.nn.conv2d(input=x, filter=spectral_norm(w), strides=[1, stride, stride, 1], padding=padding)
-                if use_bias:
-                    bias = tf.get_variable("bias", [channels], initializer=tf.constant_initializer(0.0))
-
-                    x = tf.nn.bias_add(x, bias)
-            else:
-                x = tf.layers.conv2d(x, filters=channels,
-                                     kernel_size=kernel, kernel_initializer=weight_init,
-                                     kernel_regularizer=weight_regularizer,
-                                     strides=stride, padding=padding, use_bias=use_bias)
-
-        return x
-
 def fully_connected(x, units, use_bias=True, sn=False, scope='linear'):
     with tf.variable_scope(scope):
         x = flatten(x)
@@ -256,19 +204,6 @@ def no_norm_resblock(x_init, channels, use_bias=True, sn=False, scope='resblock'
 
         with tf.variable_scope('res2'):
             x = conv(x, channels, kernel=3, stride=1, pad=1, pad_type='reflect', use_bias=use_bias, sn=sn)
-
-        return x + x_init
-
-def group_resblock(x_init, channels, groups, use_bias=True, sn=False, scope='resblock'):
-    with tf.variable_scope(scope):
-        with tf.variable_scope('res1'):
-            x = conv(x_init, channels, kernel=3, stride=1, pad=1, pad_type='reflect', use_bias=use_bias, sn=sn)
-            x = group_norm(x, groups)
-            x = relu(x)
-
-        with tf.variable_scope('res2'):
-            x = conv(x, channels, kernel=3, stride=1, pad=1, pad_type='reflect', use_bias=use_bias, sn=sn)
-            x = group_norm(x, groups)
 
         return x + x_init
 
@@ -431,16 +366,3 @@ def regularization_loss(scope_name) :
             loss.append(item)
 
     return tf.reduce_sum(loss)
-
-def z_sample(mean, logvar):
-    eps = tf.random_normal(tf.shape(mean), mean=0.0, stddev=1.0, dtype=tf.float32)
-
-    return mean + tf.exp(logvar * 0.5) * eps
-
-
-def kl_loss(mean, logvar):
-    # shape : [batch_size, channel]
-    loss = 0.5 * tf.reduce_sum(tf.square(mean) + tf.exp(logvar) - 1 - logvar, axis=-1)
-    loss = tf.reduce_mean(loss)
-
-    return loss
