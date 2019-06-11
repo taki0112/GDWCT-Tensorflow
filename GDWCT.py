@@ -148,12 +148,12 @@ class GDWCT(object) :
 
             for i in range(self.n_res) :
                 if i == 0:
-                    x, U = self.WCT(content, style, scope='front_WCT_' + str(i))
+                    x, U = self.WCT(content, style, sn=self.sn, scope='front_WCT_' + str(i))
                     U_list.append(U)
 
                 x = no_norm_resblock(x, channel, sn=self.sn, scope='no_norm_resblock_' + str(i))
 
-                x, U = self.WCT(x, style, scope='back_WCT_' + str(i))
+                x, U = self.WCT(x, style, sn=self.sn, scope='back_WCT_' + str(i))
                 U_list.append(U)
 
             for i in range(2) :
@@ -169,10 +169,10 @@ class GDWCT(object) :
 
             return x, U_list
 
-    def WCT(self, content, style, scope='wct'):
+    def WCT(self, content, style, sn=False, scope='wct'):
         with tf.variable_scope(scope) :
-            mu = self.MLP(style, sn=self.sn, scope='MLP_mu')
-            ct = self.MLP(style, sn=self.sn, scope='MLP_CT')
+            mu = self.MLP(style, sn=sn, scope='MLP_mu')
+            ct = self.MLP(style, sn=sn, scope='MLP_CT')
 
             alpha = tf.get_variable('alpha', shape=[1], initializer=tf.constant_initializer(0.6), constraint=lambda v: tf.clip_by_value(v, 0.0, 1.0))
 
