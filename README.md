@@ -1,5 +1,6 @@
 <img src="https://user-images.githubusercontent.com/20943085/59210582-e27c9600-8be8-11e9-8434-148cc3bdb274.png" width="100%"></img>
 
+![teaser](./assets/teaser.png)
 
 ### [Paper](https://arxiv.org/abs/1812.09912) | [Pytorch code](https://github.com/WonwoongCho/GDWCT) | [Slide](https://drive.google.com/file/d/1EnY8iUuzwOn9tVDsgJUwt6o05Ic7-f1w/view)
 
