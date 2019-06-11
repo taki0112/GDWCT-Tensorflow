@@ -3,8 +3,6 @@
 
 ### [Paper](https://arxiv.org/abs/1812.09912) | [Pytorch code](https://github.com/WonwoongCho/GDWCT) | [Slide](https://drive.google.com/file/d/1EnY8iUuzwOn9tVDsgJUwt6o05Ic7-f1w/view)
 
-# Will be soon
-
 ## Usage
 ```
 ├── dataset
