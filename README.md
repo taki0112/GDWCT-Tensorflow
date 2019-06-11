@@ -39,7 +39,34 @@
  > python main.py --dataset male2female --phase test --guide_img ./guide.png
 ```
 
+## Summary
+### Model
+![overview](./assets/overview.png)
+
+---
+
+### Colorling
+![coloring](./assets/coloring.png)
+
+---
+
+### Whitening
+![whitening](./assets/whitening.png)
+
+---
+
+### GDWCT
+![GDWCT](./assets/GDWCT.png)
+
+---
+
+### Process
+![process](./assets/process.png)
+
+---
+
 ## Results
+![result](./assets/result.png)
 
 ## Author
 Junho Kim
