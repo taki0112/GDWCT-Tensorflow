@@ -40,11 +40,6 @@
 ```
 
 ## Summary
-### Model
-![overview](./assets/overview.png)
-
----
-
 ### Coloring
 ![coloring](./assets/coloring.png)
 
@@ -57,6 +52,11 @@
 
 ### GDWCT
 ![GDWCT](./assets/GDWCT.png)
+
+---
+
+### Model
+![overview](./assets/overview.png)
 
 ---
 
