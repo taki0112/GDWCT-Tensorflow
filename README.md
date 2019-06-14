@@ -67,7 +67,7 @@
 ![result](./assets/result.png)
 
 ## Loss & Alpha graph
-![loss](./assets/gdwct_loss.png)
+![loss](./assets/loss.png)
 
 ![alpha](./assets/gdwct_alpha.png)
 
