@@ -66,5 +66,10 @@
 ## Results
 ![result](./assets/result.png)
 
+## Loss & Alpha graph
+![loss](./assets/gdwct_loss.png)
+
+![alpha](./assets/gdwct_alpha.png)
+
 ## Author
 [Junho Kim](http://bit.ly/jhkim_ai)
