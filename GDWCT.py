@@ -2,7 +2,7 @@ from ops import *
 from utils import *
 from glob import glob
 import time
-from tensorflow.contrib.data import batch_and_drop_remainder
+from tensorflow.contrib.data import prefetch_to_device, shuffle_and_repeat, map_and_batch
 
 class GDWCT(object) :
     def __init__(self, sess, args):
@@ -270,8 +270,18 @@ class GDWCT(object) :
         trainA = tf.data.Dataset.from_tensor_slices(self.trainA_dataset)
         trainB = tf.data.Dataset.from_tensor_slices(self.trainB_dataset)
 
-        trainA = trainA.prefetch(self.batch_size).shuffle(self.dataset_num).map(Image_Data_Class.image_processing, num_parallel_calls=8).apply(batch_and_drop_remainder(self.batch_size)).repeat()
-        trainB = trainB.prefetch(self.batch_size).shuffle(self.dataset_num).map(Image_Data_Class.image_processing, num_parallel_calls=8).apply(batch_and_drop_remainder(self.batch_size)).repeat()
+        gpu_device = '/gpu:0'
+
+        trainA = trainA.\
+            apply(shuffle_and_repeat(self.dataset_num)). \
+            apply(map_and_batch(Image_Data_Class.image_processing, self.batch_size, num_parallel_batches=16, drop_remainder=True)). \
+            apply(prefetch_to_device(gpu_device, None))
+
+        trainB = trainB. \
+            apply(shuffle_and_repeat(self.dataset_num)). \
+            apply(map_and_batch(Image_Data_Class.image_processing, self.batch_size, num_parallel_batches=16, drop_remainder=True)). \
+            apply(prefetch_to_device(gpu_device, None))
+        # When using dataset.prefetch, use buffer_size=None to let it detect optimal buffer size
 
         trainA_iterator = trainA.make_one_shot_iterator()
         trainB_iterator = trainB.make_one_shot_iterator()
